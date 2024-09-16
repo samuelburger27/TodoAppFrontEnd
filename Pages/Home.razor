@@ -1,0 +1,92 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebAss.ApiCommunication
+@using System.Globalization
+@inject NavigationManager NavigationManager
+@inject TodosApi TodosApi
+
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<AuthorizeView>
+    <Authorized>
+        <button class="btn btn-primary" @onclick="GoToAddNew">Add new</button>        
+        <p> Hello @context.User.Identity!.Name</p>
+        <table class="todo-table">
+            <thead class="todo-thead">
+            <tr class="todo-tr">
+                <th class="todo-th">Name</th>
+                <th class="todo-th">Notes</th>
+                <th class="todo-th">Deadline</th>
+                <th class="todo-th">Finished</th>
+                <th class="todo-th"></th>
+            </tr>
+            </thead>
+            <tbody class="todo-tbody">
+
+            @foreach (var todo in todos)
+            {
+                <tr class="todo-tr">
+                    <th class="todo-th">
+                        <p>@todo.title</p>
+                    </th>
+                    <th class="todo-th">
+                        <p>@todo.GetMaxLenBodyText()</p>
+                    </th>
+                    <th class="todo-th">
+                        <p>@todo.deadline.ToString(new CultureInfo("de-DE"))</p>
+                    </th>
+                    <th class="todo-th">
+                        <input type="checkbox" disabled @bind="todo.is_complete"/>
+                    </th>
+                    <th class="todo-th">
+                        <a href="/edit/@todo.id">Edit</a>
+                    </th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </Authorized>
+    <NotAuthorized>
+        <p>To view your Tasks you need to log in</p>
+        <button class="btn btn-primary" @onclick="GoToLoginPage">Login</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code{
+
+    private List<TodoItem> todos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchTodos();
+    }
+
+    private void GoToLoginPage()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void GoToAddNew()
+    {
+        NavigationManager.NavigateTo("/addtodo");
+    }
+
+    private async Task FetchTodos()
+    {
+        var returnValue = await TodosApi.GetAllTodos();
+        if (returnValue is null)
+        {
+            
+        }
+            //ApiFail = true;
+        else
+        {
+            todos = returnValue;
+            //isFetched = true;
+        }
+    }
+}

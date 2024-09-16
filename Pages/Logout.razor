@@ -1,0 +1,30 @@
+@page "/logout"
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebAss.ApiCommunication
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+<h3>Logout</h3>
+<p>Logging out</p>
+@if (logoutFailed)
+{
+    <p> Logout failed, please try again later</p>
+}
+
+@code {
+
+    private bool logoutFailed;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var customAuthProvider = (CookieAuthenticationStateProvider)AuthStateProvider;
+        if (await customAuthProvider.LogOut())
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            logoutFailed = true;
+        }
+    }
+}

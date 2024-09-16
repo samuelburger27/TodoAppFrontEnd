@@ -1,0 +1,66 @@
+@page "/addtodo"
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebAss.ApiCommunication
+@using WebAss.Models
+@inject NavigationManager NavigationManager
+@inject TodosApi TodosApi
+
+
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <p>@message</p>
+        <EditForm Model="@todoForm" OnValidSubmit="AddNewTodo">
+            <DataAnnotationsValidator/>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <InputText id="name" class="form-control" @bind-Value="todoForm.Name"/>
+                <ValidationMessage For="@(() => todoForm.Name)"/>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes"/>
+                <ValidationMessage For="@(() => todoForm.Notes)"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="deadline">Deadline:</label>
+                <InputDate id="deadline" class="form-control" @bind-Value="todoForm.Deadline"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+    </Authorized>
+    <NotAuthorized>
+        <p>To view your Tasks you need to log in</p>
+        <button class="btn btn-primary" @onclick="GoToLoginPage"></button>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    private string message = "";
+    private TodoForm todoForm = new();
+    
+    private void GoToLoginPage()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+    
+    protected async void AddNewTodo()
+    {
+        TodoItem newTodo = new()
+        {
+            title = todoForm.Name,
+            body = todoForm.Notes,
+            deadline = todoForm.Deadline
+        };
+        if (! await TodosApi.AddTodo(newTodo))
+        {
+            message = "Adding new Todo failed, please try again";
+            return;
+        }
+        message = "Todo was successfully added";
+        todoForm = new TodoForm();
+    }
+}

@@ -1,0 +1,95 @@
+@page "/edit/{idString}"
+@using WebAss.Models
+@using WebAss.ApiCommunication
+@inject NavigationManager NavigationManager
+@inject TodosApi TodoApi
+
+<h3>EditTodo</h3>
+
+@if (!ValidID)
+{
+    <p>Invalid url</p>
+}
+else
+{
+    <p>@message</p>
+    <EditForm Model="@todoForm" OnValidSubmit="SubmitEditTodo">
+        <DataAnnotationsValidator/>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="todoForm.Name"/>
+            <ValidationMessage For="@(() => todoForm.Name)"/>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes"/>
+            <ValidationMessage For="@(() => todoForm.Notes)"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="deadline">Deadline:</label>
+            <InputDate id="deadline" class="form-control" @bind-Value="todoForm.Deadline"/>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Finished:</label>
+            <InputCheckbox id="finished" @bind-Value="todoForm.IsFinished"/>
+            <ValidationMessage For="@(() => todoForm.Notes)"/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </EditForm>
+    <button class="btn btn-secondary" @onclick="DeleteTodo" >Delete</button>
+}
+
+@code {
+    
+    [Parameter] public string IdString { get; set; }
+    private int Id;
+    private TodoItem Todo;
+    private bool ValidID = false;
+    private TodoForm todoForm = new();
+    private string message = "";
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Id = int.Parse(IdString);
+        }
+        catch (FormatException _) {return;}
+
+        var response = await TodoApi.GetTodo(Id);
+        if (response is not null)
+        {
+            ValidID = true;
+            Todo = response;
+            todoForm.copyTodo(Todo);
+        }
+    }
+
+    private async Task DeleteTodo()
+    {
+        if (await TodoApi.DeleteTodo(Id))
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+            message = "Deletion failed, please try again later";
+    }
+
+    private async void SubmitEditTodo()
+    {
+        Todo.title = todoForm.Name;
+        Todo.body = todoForm.Notes;
+        Todo.is_complete = todoForm.IsFinished;
+        Todo.deadline = todoForm.Deadline;
+        if (await TodoApi.EditTodo(Todo))
+        {
+            message = "Todo has been edited";
+        }
+        else
+            message = "Edit failed, please try again later";
+    }
+}
