@@ -18,11 +18,10 @@ public class CookieAuthenticationStateProvider: AuthenticationStateProvider
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var user = new ClaimsPrincipal(new ClaimsIdentity());
-
+        var requestMessage = new HttpRequestMessage(HttpMethod.Get, "manage/info");
+        requestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
         try
         {
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "manage/info");
-            requestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
             var userResponse = await httpClient.SendAsync(requestMessage);
             if (userResponse.IsSuccessStatusCode)
             {
@@ -83,5 +82,10 @@ public class CookieAuthenticationStateProvider: AuthenticationStateProvider
         var response = await httpClient.SendAsync(requestMessage);
         return response.IsSuccessStatusCode;
     }
-    
+
+    public async Task<bool> IsLoggedIn()
+    {
+        var state = await GetAuthenticationStateAsync();
+        return state.User.Identity.IsAuthenticated;
+    }
 }

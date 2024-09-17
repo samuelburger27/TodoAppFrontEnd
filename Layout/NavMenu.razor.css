@@ -1,3 +1,21 @@
+
+.navbar-brand {
+
+    font-size: 3rem; /* Large font size */
+    text-align: center; /* Center align the title */
+    color: #0056b3; /* A nice blue color */
+    margin-top: 50px; /* Spacing from the top */
+    text-transform: uppercase; /* Make the text uppercase */
+    letter-spacing: 2px; /* Add space between letters */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Custom font */
+    border-bottom: 3px solid #007BFF; /* Add a bottom border */
+    display: inline-block; /* Makes the border fit just the text */
+    padding-bottom: 10px; /* Space between text and border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.navbar-brand{color:#fff}
+
 .navbar-toggler {
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -12,6 +30,7 @@
 }
 
 .bi {
+    padding-left: 10px;
     display: inline-block;
     position: relative;
     width: 1.25rem;

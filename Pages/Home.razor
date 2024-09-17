@@ -4,14 +4,13 @@
 @using System.Globalization
 @inject NavigationManager NavigationManager
 @inject TodosApi TodosApi
-
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
 <AuthorizeView>
     <Authorized>
+        <h1>Your Todos</h1>
         <button class="btn btn-primary" @onclick="GoToAddNew">Add new</button>        
         <p> Hello @context.User.Identity!.Name</p>
         <table class="todo-table">
@@ -62,7 +61,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await FetchTodos();
+        var customAuthProvider = (CookieAuthenticationStateProvider)AuthStateProvider;
+        if (await customAuthProvider.IsLoggedIn())
+            await FetchTodos();
     }
 
     private void GoToLoginPage()

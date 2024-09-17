@@ -25,7 +25,7 @@
             
             <div class="form-group">
                 <label for="deadline">Deadline:</label>
-                <InputDate id="deadline" class="form-control" @bind-Value="todoForm.Deadline"/>
+                <InputDate Type="InputDateType.DateTimeLocal" id="deadline" class="form-control" @bind-Value="todoForm.Deadline"/>
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -33,7 +33,7 @@
     </Authorized>
     <NotAuthorized>
         <p>To view your Tasks you need to log in</p>
-        <button class="btn btn-primary" @onclick="GoToLoginPage"></button>
+        <button class="btn btn-primary" @onclick="GoToLoginPage">Login</button>
     </NotAuthorized>
 </AuthorizeView>
 

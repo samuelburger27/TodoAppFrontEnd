@@ -6,6 +6,7 @@
 
 
 <h3>Sing In</h3>
+<p>@Message</p>
 <EditForm Model="@form" OnValidSubmit="LoginSubmit">
     <DataAnnotationsValidator/>
     <div class="form-group">
@@ -22,7 +23,6 @@
     <button type="submit" @onclick="() => form.isLogin = true" class = "btn btn-primary">Sign In</button>
     <button type="submit" @onclick="() => form.isLogin = false" class = "btn btn-secondary">Register</button>
 </EditForm>
-<p>@Message</p>
 
 
 @code {

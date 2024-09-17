@@ -13,11 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Shared\AddTodo.razor" />
+    <Folder Include="Todos\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Todos\" />
+    <_ContentIncludedByDefault Remove="Shared\AddTodo.razor" />
+    <_ContentIncludedByDefault Remove="wwwroot\sample-data\weather.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
   </ItemGroup>
 
 </Project>

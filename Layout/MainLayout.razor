@@ -10,10 +10,11 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized>
-                    <a href="/logout" targer="_blank">Logout</a>
+                    <p>@context.User.Identity!.Name</p>
+                    <a href="/logout">Logout</a>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="/login" target="_blank">Login</a>
+                    <a href="/login">Login</a>
                 </NotAuthorized>
             </AuthorizeView>
         </div>
