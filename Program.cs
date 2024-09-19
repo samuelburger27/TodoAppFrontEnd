@@ -8,7 +8,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7075") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://api.samuelburger.me") });
 builder.Services.AddScoped<AuthenticationStateProvider, CookieAuthenticationStateProvider>();
 builder.Services.AddScoped<TodosApi>();
 builder.Services.AddAuthorizationCore();
