@@ -8,20 +8,20 @@
 <h3>Sing In</h3>
 <p>@Message</p>
 <EditForm Model="@form" OnValidSubmit="LoginSubmit">
-    <DataAnnotationsValidator/>
+    <DataAnnotationsValidator />
     <div class="form-group">
         <label for="email">e-mail:</label>
-        <InputText id="email" class="form-control" @bind-Value="form.Email"/>
-        <ValidationMessage For="@(() => form.Email)"/>
+        <InputText id="email" class="form-control" @bind-Value="form.Email" />
+        <ValidationMessage For="@(() => form.Email)" />
     </div>
 
     <div class="form-group">
         <label for="password">password:</label>
         <InputText id="password" type="password" class="form-control" @bind-Value="form.Password"></InputText>
-        <ValidationMessage For="@(() => form.Password)"/>
+        <ValidationMessage For="@(() => form.Password)" />
     </div>
-    <button type="submit" @onclick="() => form.isLogin = true" class = "btn btn-primary">Sign In</button>
-    <button type="submit" @onclick="() => form.isLogin = false" class = "btn btn-secondary">Register</button>
+    <button type="submit" @onclick="() => form.isLogin = true" class="btn btn-primary">Sign In</button>
+    <button type="submit" @onclick="() => form.isLogin = false" class="btn btn-secondary">Register</button>
 </EditForm>
 
 
@@ -29,35 +29,35 @@
     private string Message = "Please sing in";
     private SignInForm form = new();
 
-     private async Task LoginSubmit()
-     {
-         var customAuthProvider = (CookieAuthenticationStateProvider)AuthStateProvider;
-         LoginModel model = new()
-         {
-             Email = form.Email,
-             Password = form.Password
-         };
-         if (form.isLogin)
-         {
-             if (await customAuthProvider.Login(model))
-             {
-                 Message = "Successfully logged in";
-             }
-             else
-             {
-                 Message = "Login failed";
-             }
-         }
-         else
-         {
-             if (await customAuthProvider.Register(model))
-             {
-                 Message = "Registration failed";
-             }
-             else
-             {
-                 Message = "Account successfully created, please login in";
-             }
-         }
-     }
+    private async Task LoginSubmit()
+    {
+        var customAuthProvider = (CookieAuthenticationStateProvider)AuthStateProvider;
+        LoginModel model = new()
+            {
+                Email = form.Email,
+                Password = form.Password
+            };
+        if (form.isLogin)
+        {
+            if (await customAuthProvider.Login(model))
+            {
+                Message = "Successfully logged in";
+            }
+            else
+            {
+                Message = "Login failed";
+            }
+        }
+        else
+        {
+            if (await customAuthProvider.Register(model) && await customAuthProvider.Login(model))
+            {
+                Message = "Account successfully created";
+            }
+            else
+            {
+                Message = "Registration failed";
+            }
+        }
+    }
 }
