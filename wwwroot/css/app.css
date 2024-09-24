@@ -1,68 +1,16 @@
-html, body {
+html,
+body {
     padding: 0;
     margin: 0;
+    border: 0;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 16px;
 }
 
-.todo-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+a {
+    text-decoration: none;
+    color: #fff;
 }
-
-/* Table header styling */
-.todo-thead {
-    background-color: #1861ac;
-    color: white;
-}
-
-.todo-th, .todo-td {
-    padding: 12px 15px;
-    text-align: left;
-}
-
-/* Alternate row colors for better readability */
-.todo-tbody .todo-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Hover effect on table rows */
-.todo-tbody .todo-tr:hover {
-    background-color: #ddd;
-    cursor: pointer;
-}
-
-/* Border and spacing between cells */
-.todo-th, .todo-td {
-    border-bottom: 1px solid #ddd;
-}
-
-/* Finished column specific styling */
-.todo-td:nth-child(3) {
-    text-align: center;
-    font-weight: bold;
-}
-
-.todo-td:nth-child(3):before {
-    content: "● ";
-    color: green;
-}
-
-/* Responsive table for smaller screens */
-@media screen and (max-width: 600px) {
-    .todo-table {
-        width: 100%;
-    }
-
-    .todo-th, .todo-td {
-        padding: 10px;
-        font-size: 14px;
-    }
-}
-
 
 .form-group {
     margin-bottom: 1rem;
@@ -98,7 +46,8 @@ button.btn:hover {
     color: green;
 }
 
-a, .btn-link {
+a,
+.btn-link {
     color: #006bb7;
 }
 
@@ -108,7 +57,11 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 

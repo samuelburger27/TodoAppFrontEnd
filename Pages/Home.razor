@@ -11,8 +11,7 @@
 <AuthorizeView>
     <Authorized>
         <h1>Your Todos</h1>
-        <button class="btn btn-primary" @onclick="GoToAddNew">Add new</button>        
-        <p> Hello @context.User.Identity!.Name</p>
+        <button class="btn btn-primary" @onclick="GoToAddNew">Add new</button>
         <table class="todo-table">
             <thead class="todo-thead">
             <tr class="todo-tr">

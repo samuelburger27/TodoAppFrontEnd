@@ -14,17 +14,18 @@
 @code {
 
     private bool logoutFailed;
-    
+
     protected override async Task OnInitializedAsync()
     {
         var customAuthProvider = (CookieAuthenticationStateProvider)AuthStateProvider;
         if (await customAuthProvider.LogOut())
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/", true);
         }
         else
         {
             logoutFailed = true;
+            StateHasChanged();
         }
     }
 }
