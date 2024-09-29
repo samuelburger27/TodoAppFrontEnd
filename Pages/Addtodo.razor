@@ -10,25 +10,26 @@
     <Authorized>
         <p>@message</p>
         <EditForm Model="@todoForm" OnValidSubmit="AddNewTodo">
-            <DataAnnotationsValidator/>
+            <DataAnnotationsValidator />
             <div class="form-group">
                 <label for="name">Name:</label>
-                <InputText id="name" class="form-control" @bind-Value="todoForm.Name"/>
-                <ValidationMessage For="@(() => todoForm.Name)"/>
+                <InputText id="name" class="form-control" @bind-Value="todoForm.Name" />
+                <ValidationMessage For="@(() => todoForm.Name)" />
             </div>
 
             <div class="form-group">
                 <label for="notes">Notes:</label>
-                <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes"/>
-                <ValidationMessage For="@(() => todoForm.Notes)"/>
-            </div>
-            
-            <div class="form-group">
-                <label for="deadline">Deadline:</label>
-                <InputDate Type="InputDateType.DateTimeLocal" id="deadline" class="form-control" @bind-Value="todoForm.Deadline"/>
+                <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes" />
+                <ValidationMessage For="@(() => todoForm.Notes)" />
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="form-group">
+                <label for="deadline">Deadline:</label>
+                <InputDate Type="InputDateType.DateTimeLocal" id="deadline" class="form-control"
+                    @bind-Value="todoForm.Deadline" />
+            </div>
+
+            <button type="submit" class="btn btn-primary" disabled=@IsDisabled>Submit</button>
         </EditForm>
     </Authorized>
     <NotAuthorized>
@@ -41,26 +42,31 @@
 @code {
     private string message = "";
     private TodoForm todoForm = new();
-    
+
+    private bool IsDisabled = false;
+
     private void GoToLoginPage()
     {
         NavigationManager.NavigateTo("/login");
     }
-    
+
     protected async void AddNewTodo()
     {
         TodoItem newTodo = new()
-        {
-            title = todoForm.Name,
-            body = todoForm.Notes,
-            deadline = todoForm.Deadline
-        };
-        if (! await TodosApi.AddTodo(newTodo))
+            {
+                title = todoForm.Name,
+                body = todoForm.Notes,
+                deadline = todoForm.Deadline
+            };
+        IsDisabled = true;
+        if (!await TodosApi.AddTodo(newTodo))
         {
             message = "Adding new Todo failed, please try again";
             return;
         }
         message = "Todo was successfully added";
+        IsDisabled = false;
         todoForm = new TodoForm();
+        StateHasChanged();
     }
 }
