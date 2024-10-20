@@ -9,28 +9,41 @@
 <AuthorizeView Context="authContext">
     <Authorized>
         <p>@message</p>
-        <EditForm Model="@todoForm" OnValidSubmit="AddNewTodo">
-            <DataAnnotationsValidator />
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <InputText id="name" class="form-control" @bind-Value="todoForm.Name" />
-                <ValidationMessage For="@(() => todoForm.Name)" />
-            </div>
+        <div class="add-todo-wrapper">
+            <EditForm Model="@todoForm" OnValidSubmit="AddNewTodo">
+                <DataAnnotationsValidator />
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <InputText id="name" class="form-control" @bind-Value="todoForm.Name" />
+                    <ValidationMessage For="@(() => todoForm.Name)" />
+                </div>
 
-            <div class="form-group">
-                <label for="notes">Notes:</label>
-                <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes" />
-                <ValidationMessage For="@(() => todoForm.Notes)" />
-            </div>
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <InputText id="notes" class="form-control" @bind-Value="todoForm.Notes" />
+                    <ValidationMessage For="@(() => todoForm.Notes)" />
+                </div>
 
-            <div class="form-group">
-                <label for="deadline">Deadline:</label>
-                <InputDate Type="InputDateType.DateTimeLocal" id="deadline" class="form-control"
-                    @bind-Value="todoForm.Deadline" />
-            </div>
+                <div class="form-group">
+                    <label for="deadline">Deadline:</label>
+                    <InputDate Type="InputDateType.DateTimeLocal" id="deadline" class="form-date-time"
+                               @bind-Value="todoForm.Deadline" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="inline" for="notification">Send notification to my e-mail</label>
+                    <InputCheckbox id="notification" class="form-check-input inline" @bind-Value="todoForm.SendNotification" />
+                </div>
+                
+                <div class="form-group">
+                    <label class="inline @(!todoForm.SendNotification ? "grey" : "")" for="range">Notify </label>
+                    <InputNumber id="range" class="form-number-input inline" disabled="@(!todoForm.SendNotification)" @bind-Value="todoForm.NotifyBefore"/>
+                    <span class="inline @(!todoForm.SendNotification ? "grey" : "")" > minutes before</span>
+                </div>
 
-            <button type="submit" class="btn btn-primary" disabled=@IsDisabled>Submit</button>
-        </EditForm>
+                <button type="submit" class="btn btn-primary" disabled=@IsDisabled>Submit</button>
+            </EditForm>
+        </div>
     </Authorized>
     <NotAuthorized>
         <p>To view your Tasks you need to log in</p>
@@ -43,7 +56,7 @@
     private string message = "";
     private TodoForm todoForm = new();
 
-    private bool IsDisabled = false;
+    private bool IsDisabled;
 
     private void GoToLoginPage()
     {
@@ -52,12 +65,8 @@
 
     protected async void AddNewTodo()
     {
-        TodoItem newTodo = new()
-            {
-                title = todoForm.Name,
-                body = todoForm.Notes,
-                deadline = todoForm.Deadline
-            };
+        TodoItem newTodo = new();
+        newTodo.CopyFromForm(todoForm);
         IsDisabled = true;
         if (!await TodosApi.AddTodo(newTodo))
         {

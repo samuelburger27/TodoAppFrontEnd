@@ -12,12 +12,29 @@ a {
     color: #fff;
 }
 
+.inline {
+    display: inline-block;
+    vertical-align: middle; 
+    margin-right: 10px; 
+}
+
+.grey {
+    color: #c5c5c5;
+}
+.add-todo-wrapper {
+    width: 50%;
+    background-color: #dadada;
+    border: 2px solid #007bff;
+    padding: 5px;
+    margin: 5px;
+}
+
 .form-group {
     margin-bottom: 1rem;
 }
 
 .form-control {
-    width: 100%;
+    width: 95%;
     padding: 0.5rem;
     margin-top: 0.25rem;
     border: 1px solid #ccc;
@@ -26,6 +43,17 @@ a {
 
 .form-check-input {
     margin-left: 0.5rem;
+}
+
+.form-date-time {
+    width: 40%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px
+}
+.form-number-input {
+    width: 5rem;
 }
 
 button.btn {
@@ -39,6 +67,7 @@ button.btn {
 
 button.btn:hover {
     background-color: #0056b3;
+    transform: scale(1.02);
 }
 
 .text-success {

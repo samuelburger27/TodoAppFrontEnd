@@ -15,7 +15,6 @@ public class TodosApi
 
     public async Task<List<TodoItem>?> GetAllTodos()
     {
-        List<TodoItem>? result = new();
         var requestMessage = new HttpRequestMessage(HttpMethod.Get, "todoitems");
         requestMessage.SetBrowserRequestCredentials(BrowserRequestCredentials.Include);
         var response = await _httpClient.SendAsync(requestMessage);
@@ -25,7 +24,8 @@ public class TodosApi
         }
 
         var json = await response.Content.ReadAsStringAsync();
-        result = JsonSerializer.Deserialize<List<TodoItem>>(json);
+        var result = JsonSerializer.Deserialize<List<TodoItem>>(json) ?? new List<TodoItem>();
+        result.Sort(TodoItem.Compare);
         return result;
     }
     
