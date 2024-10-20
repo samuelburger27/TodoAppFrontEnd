@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -86,6 +87,8 @@ public class CookieAuthenticationStateProvider: AuthenticationStateProvider
     public async Task<bool> IsLoggedIn()
     {
         var state = await GetAuthenticationStateAsync();
+        if (state.User.Identity == null)
+            return false;
         return state.User.Identity.IsAuthenticated;
     }
 }

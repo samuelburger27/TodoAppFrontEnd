@@ -10,42 +10,24 @@
 
 <AuthorizeView>
     <Authorized>
-        <h1>Your Todos</h1>
-        <button class="btn btn-primary" @onclick="GoToAddNew">Add new</button>
-        <table class="todo-table">
-            <thead class="todo-thead">
-            <tr class="todo-tr">
-                <th class="todo-th">Name</th>
-                <th class="todo-th">Notes</th>
-                <th class="todo-th">Deadline</th>
-                <th class="todo-th">Finished</th>
-                <th class="todo-th"></th>
-            </tr>
-            </thead>
-            <tbody class="todo-tbody">
-
+        <h1>Todos: </h1>
+        <button class="btn btn-primary add-btn" @onclick="GoToAddNew">Add new</button>
+        <div class="todo-wrapper">
             @foreach (var todo in todos)
             {
-                <tr class="todo-tr">
-                    <th class="todo-th">
-                        <p>@todo.title</p>
-                    </th>
-                    <th class="todo-th">
-                        <p>@todo.GetMaxLenBodyText()</p>
-                    </th>
-                    <th class="todo-th">
-                        <p>@todo.deadline.ToString(new CultureInfo("de-DE"))</p>
-                    </th>
-                    <th class="todo-th">
-                        <input type="checkbox" disabled @bind="todo.is_complete"/>
-                    </th>
-                    <th class="todo-th">
-                        <a href="/edit/@todo.id">Edit</a>
-                    </th>
-                </tr>
+                <div class=@GetTodoCssClass(todo)>
+                    <h2 class="todo-title">@todo.title</h2>
+                    <p class="todo-body">@todo.body</p>
+                    <p class="todo-deadline"><strong>Deadline: </strong>
+                        @todo.deadline.ToString(new CultureInfo("de-DE"))</p>
+                    @if (todo.is_complete)
+                    {
+                        <p class="todo-deadline"><strong>Complete</strong></p>
+                    }
+                    <button class="btn btn-primary" @onclick="() => GoToEdit(todo.id)">Edit</button>
+                </div>
             }
-            </tbody>
-        </table>
+        </div>
     </Authorized>
     <NotAuthorized>
         <p>To view your Tasks you need to log in</p>
@@ -65,6 +47,20 @@
             await FetchTodos();
     }
 
+    private string GetTodoCssClass(TodoItem todo)
+    {
+        string className = "todo-item";
+        double remain = todo.deadline.Subtract(DateTime.Now).TotalMinutes;
+        if (todo.is_complete)
+        {
+            className += " todo-item-complete";
+        } else if (remain >= 0 && remain <= 60)
+        {
+            className += " todo-item-deadline";
+        }
+        return className;
+    }
+
     private void GoToLoginPage()
     {
         NavigationManager.NavigateTo("/login");
@@ -75,18 +71,15 @@
         NavigationManager.NavigateTo("/addtodo");
     }
 
+    private void GoToEdit(int id)
+    {
+        NavigationManager.NavigateTo($"/edit/{id}");
+    }
+
     private async Task FetchTodos()
     {
         var returnValue = await TodosApi.GetAllTodos();
-        if (returnValue is null)
-        {
-            
-        }
-            //ApiFail = true;
-        else
-        {
+        if (returnValue is not null)
             todos = returnValue;
-            //isFetched = true;
-        }
     }
 }
